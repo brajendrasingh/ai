@@ -1,9 +1,14 @@
 package com.bksoft.rag.service;
 
 import com.bksoft.rag.dto.SearchResponse;
+import org.springframework.ai.document.Document;
+import org.springframework.ai.vectorstore.SearchRequest;
+import org.springframework.ai.vectorstore.VectorStore;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class DocumentService {
 
     private final VectorStore vectorStore;
@@ -22,6 +27,6 @@ public class DocumentService {
                 SearchRequest.builder().query(query).topK(topK).build());
 
         return documents.stream().map(document -> new SearchResponse(
-                        document.getId(), document.getText(), document.getScore() != null ? document.getScore() : 0.0)).toList();
+                document.getId(), document.getText(), document.getScore() != null ? document.getScore() : 0.0)).toList();
     }
 }

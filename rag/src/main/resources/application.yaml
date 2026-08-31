@@ -10,12 +10,23 @@ spring:
 
     ollama:
       base-url: http://172.26.8.66:11434
-
+      # ==========================
+      # LLM / Chat Model
+      # ==========================
+      chat:
+        options:
+          model: llama3.2
+          temperature: 0.2
+      # ==========================
+      # Embedding Model
+      # ==========================
       embedding:
         model: mxbai-embed-large
         keep-alive: 5m
         truncate: true
-
+    # ==========================
+    # Milvus Vector Database
+    # ==========================
     vectorstore:
       milvus:
         client:

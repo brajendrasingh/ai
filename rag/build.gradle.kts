@@ -20,9 +20,7 @@ repositories {
 
 dependencyManagement {
     imports {
-        mavenBom(
-            "org.springframework.ai:spring-ai-bom:2.0.1}"
-        )
+        mavenBom("org.springframework.ai:spring-ai-bom:2.0.1")
     }
 }
 
@@ -31,6 +29,7 @@ dependencies {
     implementation("org.springframework.ai:spring-ai-starter-model-ollama")
     // Spring AI - Milvus Vector Store
     implementation("org.springframework.ai:spring-ai-starter-vector-store-milvus")
+    // Spring Rest Api
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
