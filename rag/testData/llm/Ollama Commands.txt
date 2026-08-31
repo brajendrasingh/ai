@@ -1,0 +1,6 @@
+docker compose exec ollama ollama list
+docker compose exec ollama ollama ps
+docker compose exec ollama ollama pull nomic-embed-text
+docker compose exec ollama ollama pull mxbai-embed-large
+docker compose exec ollama ollama pull llama3
+docker compose exec ollama ollama run llama3

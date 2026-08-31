@@ -15,7 +15,7 @@ spring:
       # ==========================
       chat:
         options:
-          model: llama3.2
+          model: llama3:latest
           temperature: 0.2
       # ==========================
       # Embedding Model
