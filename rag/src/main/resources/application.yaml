@@ -1,0 +1,35 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: rag
+
+  ai:
+    model:
+      embedding: ollama
+
+    ollama:
+      base-url: http://172.26.8.66:11434
+
+      embedding:
+        model: mxbai-embed-large
+        keep-alive: 5m
+        truncate: true
+
+    vectorstore:
+      milvus:
+        client:
+          host: 172.26.8.66
+          port: 19530
+          username: root
+          password: milvus
+
+        database-name: default
+        collection-name: documents
+
+        embedding-dimension: 1024
+
+        index-type: IVF_FLAT
+        metric-type: COSINE
+
+        initialize-schema: true
