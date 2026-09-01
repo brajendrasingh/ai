@@ -17,7 +17,7 @@ public class RagController {
         this.ragService = ragService;
     }
 
-    @GetMapping("/ask")
+    @GetMapping("/search")
     public ResponseEntity<String> ask(@RequestParam String query) {
         return ResponseEntity.ok(ragService.ask(query));
     }

@@ -20,7 +20,7 @@ public class DocumentController {
 
     @PostMapping
     public ResponseEntity<String> addDocument(@RequestBody DocumentRequest request) {
-        documentService.addDocument(request.text());
+        documentService.addDocument(request);
         return ResponseEntity.ok("Document added successfully");
     }
 
