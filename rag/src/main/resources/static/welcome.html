@@ -597,151 +597,58 @@
      ===================================== -->
 
 <header class="header">
-
-    <div class="logo">
-
-        BKSoft
-        <span>RAG</span>
-
-    </div>
-
-
-    <div class="backend-status">
-
-        <span class="status-dot"></span>
-
-        Backend
-
-    </div>
-
+    <div class="logo">BKSoft<span>RAG</span></div>
+    <div class="backend-status"><a href="./index.html">Search Document</a></div>
 </header>
-
 
 <!-- =====================================
      MAIN
      ===================================== -->
 
 <main class="container">
-
-
-    <h1 class="page-title">
-
-        Add Document
-
-    </h1>
-
-
+    <h1 class="page-title">Add Document</h1>
     <p class="page-description">
-
         Add documents to your knowledge base
         for semantic search and RAG.
-
     </p>
-
-
     <!-- =====================================
          CARD
          ===================================== -->
-
     <section class="card">
-
-
         <!-- MESSAGE -->
-
-        <div
-                id="message"
-                class="message">
-        </div>
-
-
+        <div id="message" class="message"></div>
         <!-- =================================
              INGESTION TYPE
              ================================= -->
-
-        <div class="section-title">
-
-            Document Processing
-
-        </div>
-
-
+        <div class="section-title">Document Processing</div>
         <div class="ingestion-options">
-
-
-            <label
-                    id="normalOption"
-                    class="ingestion-option selected">
-
+            <label id="normalOption" class="ingestion-option selected">
                 <div class="option-title">
-
-                    <input
-                            type="radio"
-                            name="ingestion"
-                            value="normal"
-                            checked
-                            onchange="changeIngestion()">
-
-                    Normal Document
-
+                    <input type="radio" name="ingestion" value="normal" checked onchange="changeIngestion()">Normal
+                    Document
                 </div>
-
-
                 <div class="option-description">
-
                     Add the document directly
                     using the normal document
                     processing pipeline.
-
                 </div>
-
             </label>
-
-
-            <label
-                    id="chunkOption"
-                    class="ingestion-option">
-
+            <label id="chunkOption" class="ingestion-option">
                 <div class="option-title">
-
-                    <input
-                            type="radio"
-                            name="ingestion"
-                            value="chunks"
-                            onchange="changeIngestion()">
-
-                    Chunked Document
-
+                    <input type="radio" name="ingestion" value="chunks" onchange="changeIngestion()">Chunked Document
                 </div>
-
-
                 <div class="option-description">
-
                     Split the document into
                     smaller chunks before
                     creating embeddings.
-
                 </div>
-
             </label>
-
-
         </div>
-
-
         <!-- =================================
              DOCUMENT INFORMATION
              ================================= -->
-
-        <div class="section-title">
-
-            Document Information
-
-        </div>
-
-
+        <div class="section-title">Document Information</div>
         <div class="form-grid">
-
-
             <div class="form-group">
 
                 <label for="title">
@@ -1160,29 +1067,14 @@
          * VALIDATION
          * ======================================
          */
-
         if (!title) {
-
-            showError(
-                "Please enter a document title."
-            );
-
+            showError("Please enter a document title.");
             return;
-
         }
-
-
         if (!content) {
-
-            showError(
-                "Please enter document content."
-            );
-
+            showError("Please enter document content.");
             return;
-
         }
-
-
         /*
          * ======================================
          * REQUEST BODY
@@ -1198,23 +1090,13 @@
          * author
          *
          */
-
-
         const request = {
-
             title: title,
-
-            content: content,
-
+            text: content,
             source: source,
-
             category: category,
-
             author: author
-
         };
-
-
         /*
          * ======================================
          * CHUNK OPTIONS
@@ -1222,84 +1104,28 @@
          */
 
         if (type === "chunks") {
-
-            request.chunkSize =
-                Number(
-                    document
-                        .getElementById(
-                            "chunkSize"
-                        )
-                        .value
-                );
-
-
-            request.chunkOverlap =
-                Number(
-                    document
-                        .getElementById(
-                            "overlap"
-                        )
-                        .value
-                );
-
+            request.chunkSize = Number(document.getElementById("chunkSize").value);
+            request.chunkOverlap = Number(document.getElementById("overlap").value);
         }
-
-
         /*
          * ======================================
          * API
          * ======================================
          */
-
-        const endpoint =
-            type === "chunks"
-                ? "/api/documents/chunks"
-                : "/api/documents";
-
-
-        const button =
-            document
-                .getElementById(
-                    "addButton"
-                );
-
-
+        const endpoint = type === "chunks" ? "/api/documents/chunks" : "/api/documents";
+        const button = document.getElementById("addButton");
         button.disabled = true;
-
-        button.textContent =
-            "Adding...";
-
-
+        button.textContent = "Adding...";
         clearMessage();
-
-
         try {
-
-
-            const response =
-                await fetch(
-                    API_BASE_URL +
-                    endpoint,
-                    {
-
-                        method: "POST",
-
-                        headers: {
-
-                            "Content-Type":
-                                "application/json"
-
-                        },
-
-                        body:
-                            JSON.stringify(
-                                request
-                            )
-
-                    }
-                );
-
-
+            const response = await fetch(API_BASE_URL + endpoint, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(request)
+                }
+            );
             /*
              * Read String response
              *
@@ -1307,112 +1133,41 @@
              *
              * ResponseEntity<String>
              */
-
-            const result =
-                await response.text();
-
-
+            const result = await response.text();
             if (!response.ok) {
-
-                throw new Error(
-                    result ||
-                    "Unable to add document."
-                );
-
+                throw new Error(result || "Unable to add document.");
             }
-
-
-            showSuccess(
-                result ||
-                "Document added successfully."
-            );
-
-
+            showSuccess(result || "Document added successfully.");
             clearDocumentFields();
-
-
         } catch (error) {
-
-
             console.error(error);
-
-
-            showError(
-                error.message ||
-                "Unable to connect to backend."
-            );
-
-
+            showError(error.message || "Unable to connect to backend.");
         } finally {
-
             button.disabled = false;
-
-            button.textContent =
-                "Add Document";
-
+            button.textContent = "Add Document";
         }
-
     }
-
 
     /*
      * ==========================================
      * CHARACTER COUNT
      * ==========================================
      */
-
     function updateCharacterCount() {
-
-
-        const content =
-            document
-                .getElementById(
-                    "content"
-                )
-                .value;
-
-
-        const count =
-            content.length;
-
-
-        document
-            .getElementById(
-                "characterCount"
-            )
-            .textContent =
-            count +
-            (
-                count === 1
-                    ? " character"
-                    : " characters"
-            );
-
+        const content = document.getElementById("content").value;
+        const count = content.length;
+        document.getElementById("characterCount").textContent = count + (count === 1 ? " character" : " characters");
     }
-
 
     /*
      * ==========================================
      * CLEAR FORM
      * ==========================================
      */
-
     function clearForm() {
-
-
-        document
-            .getElementById("title")
-            .value = "";
-
-
-        document
-            .getElementById("source")
-            .value = "";
-
-
-        document
-            .getElementById("content")
-            .value = "";
+        document.getElementById("title").value = "";
+        document.getElementById("source").value = "";
+        document.getElementById("content").value = "";
 
 
         document
