@@ -37,10 +37,12 @@ spring:
 
         database-name: default
         collection-name: documents
-
         embedding-dimension: 1024
-
         index-type: IVF_FLAT
         metric-type: COSINE
-
         initialize-schema: true
+
+app:
+  rag:
+    top-k: 5
+    similarity-threshold: 0.75

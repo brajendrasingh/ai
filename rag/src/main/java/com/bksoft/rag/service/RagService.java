@@ -23,8 +23,14 @@ public class RagService {
         // 1. Search relevant documents from Milvus
         List<Document> documents = vectorStore.similaritySearch(SearchRequest.builder().query(query).topK(5).build());
 
-        // 2. Extract document text and create context
-        String context = documents.stream().map(Document::getText).collect(Collectors.joining("\n\n"));
+        // 2. Extract document text & metadata and create context
+        String context = documents.stream().map(document -> """
+                Content:
+                %s
+                
+                Source:
+                %s
+                """.formatted(document.getText(), document.getMetadata())).collect(Collectors.joining("\n\n"));
 
         // 3. Create RAG prompt
         String prompt = """
