@@ -1,0 +1,24 @@
+services:
+  rag:
+    image: rag:1.0
+    build:
+      context: ./../../
+      dockerfile: Dockerfile
+    container_name: rag
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      embedding: mxbai-embed-large
+    networks:
+      - ai-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+volumes:
+  rag-data:
+
+networks:
+  ai-network:
+    external: true
+    
