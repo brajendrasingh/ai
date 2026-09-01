@@ -3,6 +3,7 @@ package com.bksoft.rag.service;
 import com.bksoft.rag.dto.DocumentRequest;
 import com.bksoft.rag.dto.SearchResponse;
 import org.springframework.ai.document.Document;
+import org.springframework.ai.transformer.splitter.TokenTextSplitter;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,6 +31,25 @@ public class DocumentService {
         metadata.put("category", request.category());
         Document document = new Document(request.text(), metadata);
         vectorStore.add(List.of(document));
+    }
+
+    public void addDocumentUsingChunks(DocumentRequest request) {
+        // 1. Create metadata
+        Map<String, Object> metadata = new HashMap<>();
+        metadata.put("source", request.source());
+        metadata.put("category", request.category());
+
+        // 2. Create original document
+        Document document = new Document(request.text(), metadata);
+
+        // 3. Create text splitter
+        TokenTextSplitter splitter = TokenTextSplitter.builder().withChunkSize(500).withMinChunkSizeChars(100).withKeepSeparator(true).build();
+
+        // 4. Split document into chunks
+        List<Document> chunks = splitter.apply(List.of(document));
+
+        // 5. Store chunks in Milvus
+        vectorStore.add(chunks);
     }
 
     public List<SearchResponse> search(String query, int topK) {

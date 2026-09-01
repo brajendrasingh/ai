@@ -24,6 +24,12 @@ public class DocumentController {
         return ResponseEntity.ok("Document added successfully");
     }
 
+    @PostMapping("/chunks")
+    public ResponseEntity<String> addDocumentUsingChunks(@RequestBody DocumentRequest request) {
+        documentService.addDocumentUsingChunks(request);
+        return ResponseEntity.ok("Document added successfully");
+    }
+
     @GetMapping("/search")
     public ResponseEntity<List<SearchResponse>> search(@RequestParam String query, @RequestParam(defaultValue = "5") int topK) {
         return ResponseEntity.ok(documentService.search(query, topK));
