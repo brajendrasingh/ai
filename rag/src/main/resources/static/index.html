@@ -478,8 +478,7 @@
 <main class="container">
     <h1 class="page-title">Knowledge Search</h1>
     <p class="page-description">
-        Search your documents using semantic vector search
-        or generate an AI answer using RAG.
+        Search your documents using semantic vector search or generate an AI answer using RAG.
     </p>
     <!-- =========================================
          SEARCH
@@ -493,19 +492,10 @@
         <!-- SEARCH TYPE -->
         <div class="search-type">
             <span class="search-type-label">Search type:</span>
-            <label class="radio">
-                <input type="radio"
-                       name="searchType"
-                       value="vector"
-                       checked
-                       onchange="changeSearchType()">
-                Vector Search
-            </label>
-            <label class="radio">
-                <input type="radio"
-                       name="searchType"
-                       value="rag"
-                       onchange="changeSearchType()">RAG Search</label>
+            <label class="radio"><input type="radio" name="searchType" value="vector" checked
+                                        onchange="changeSearchType()">Vector Search</label>
+            <label class="radio"> <input type="radio" name="searchType" value="rag" onchange="changeSearchType()">RAG
+                Search</label>
         </div>
         <!-- OPTIONS -->
         <div class="options">
@@ -559,79 +549,23 @@
         <!-- =========================================
              RAG ANSWER
              ========================================= -->
-        <section
-                id="answerCard"
-                class="card answer-card">
-
-
+        <section id="answerCard" class="card answer-card">
             <div class="card-header">
-
-                <span class="card-title">
-
-                    AI Answer
-
-                </span>
-
+                <span class="card-title">AI Answer</span>
             </div>
-
-
             <div class="answer">
-
-
-                <span class="rag-label">
-
-                    RAG RESPONSE
-
-                </span>
-
-
-                <div
-                        id="answerText"
-                        class="answer-text">
-
-                </div>
-
-
+                <span class="rag-label">RAG RESPONSE</span>
+                <div id="answerText" class="answer-text"></div>
                 <div class="sources">
-
-
-                    <div class="sources-title">
-
-                        Retrieved Sources
-
-                    </div>
-
-
-                    <div id="sources">
-
-                    </div>
-
-
+                    <div class="sources-title">Retrieved Sources</div>
+                    <div id="sources"></div>
                 </div>
-
-
             </div>
-
-
         </section>
-
-
     </div>
-
-
 </main>
-
-
-<footer class="footer">
-
-    BKSoft RAG Application
-
-</footer>
-
-
+<footer class="footer">BKSoft RAG Application</footer>
 <script>
-
-
     /*
      * ==========================================
      * CONFIGURATION
@@ -649,132 +583,60 @@
      * const API_BASE_URL = "http://localhost:8080";
      *
      */
-
     const API_BASE_URL = "";
-
 
     /*
      * ==========================================
      * GET SEARCH TYPE
      * ==========================================
      */
-
     function getSearchType() {
-
-        return document
-            .querySelector(
-                'input[name="searchType"]:checked'
-            )
-            .value;
-
+        return document.querySelector('input[name="searchType"]:checked').value;
     }
-
 
     /*
      * ==========================================
      * CHANGE SEARCH TYPE
      * ==========================================
      */
-
     function changeSearchType() {
-
-        const type =
-            getSearchType();
-
-        const answerCard =
-            document.getElementById("answerCard");
-
-
+        const type = getSearchType();
+        const answerCard = document.getElementById("answerCard");
         if (type === "rag") {
-
-            answerCard.style.display =
-                "block";
-
+            answerCard.style.display = "block";
         } else {
-
-            answerCard.style.display =
-                "none";
-
+            answerCard.style.display = "none";
         }
-
     }
-
 
     /*
      * ==========================================
      * MAIN SEARCH
      * ==========================================
      */
-
     async function search() {
-
-        const query =
-            document
-                .getElementById("searchInput")
-                .value
-                .trim();
-
-
-        const topK =
-            document
-                .getElementById("topK")
-                .value;
-
-
+        const query = document.getElementById("searchInput").value.trim();
+        const topK = document.getElementById("topK").value;
         if (!query) {
-
-            showError(
-                "Please enter a search query."
-            );
-
+            showError("Please enter a search query.");
             return;
-
         }
-
-
         clearError();
-
-
-        const type =
-            getSearchType();
-
-
+        const type = getSearchType();
         showLoading(true);
-
-
         try {
-
             if (type === "vector") {
-
-                await vectorSearch(
-                    query,
-                    topK
-                );
-
+                await vectorSearch(query, topK);
             } else {
-
-                await ragSearch(
-                    query
-                );
-
+                await ragSearch(query);
             }
-
         } catch (error) {
-
             console.error(error);
-
-            showError(
-                "Unable to connect to the backend."
-            );
-
+            showError("Unable to connect to the backend.");
         } finally {
-
             showLoading(false);
-
         }
-
     }
-
 
     /*
      * ==========================================
@@ -791,44 +653,15 @@
      * topK
      *
      */
-
-    async function vectorSearch(
-        query,
-        topK
-    ) {
-
-
-        const url =
-            API_BASE_URL +
-            "/api/documents/search" +
-            "?query=" +
-            encodeURIComponent(query) +
-            "&topK=" +
-            encodeURIComponent(topK);
-
-
-        const response =
-            await fetch(url);
-
-
+    async function vectorSearch(query, topK) {
+        const url = API_BASE_URL + "/api/documents/search" + "?query=" + encodeURIComponent(query) + "&topK=" + encodeURIComponent(topK);
+        const response = await fetch(url);
         if (!response.ok) {
-
-            throw new Error(
-                "Vector search failed: " +
-                response.status
-            );
-
+            throw new Error("Vector search failed: " + response.status);
         }
-
-
-        const data =
-            await response.json();
-
-
+        const data = await response.json();
         displayVectorResults(data);
-
     }
-
 
     /*
      * ==========================================
@@ -844,31 +677,12 @@
      * String
      *
      */
-
     async function ragSearch(query) {
-
-
-        const url =
-            API_BASE_URL +
-            "/api/rag/search" +
-            "?query=" +
-            encodeURIComponent(query);
-
-
-        const response =
-            await fetch(url);
-
-
+        const url = API_BASE_URL + "/api/rag/search" + "?query=" + encodeURIComponent(query);
+        const response = await fetch(url);
         if (!response.ok) {
-
-            throw new Error(
-                "RAG search failed: " +
-                response.status
-            );
-
+            throw new Error("RAG search failed: " + response.status);
         }
-
-
         /*
          * Your controller returns:
          *
@@ -877,15 +691,9 @@
          * Therefore we use text()
          * instead of json().
          */
-
-        const answer =
-            await response.text();
-
-
+        const answer = await response.text();
         displayRagAnswer(answer);
-
     }
-
 
     /*
      * ==========================================
@@ -905,24 +713,12 @@
      * The function supports several
      * common field names.
      */
-
     function displayVectorResults(results) {
-
-
-        const container =
-            document.getElementById("results");
-
-
+        const container = document.getElementById("results");
         container.innerHTML = "";
-
-
-        if (!results ||
-            results.length === 0) {
-
+        if (!results || results.length === 0) {
             container.innerHTML = `
-
                 <div class="empty">
-
                     <div class="empty-icon">
                         📭
                     </div>
@@ -934,103 +730,36 @@
                     <div class="empty-description">
                         Try another query.
                     </div>
-
                 </div>
-
             `;
-
-
-            document
-                .getElementById("resultCount")
-                .textContent =
-                "0 results";
-
-
+            document.getElementById("resultCount").textContent = "0 results";
             return;
-
         }
 
+        document.getElementById("resultCount").textContent = results.length + " results";
+        results.forEach((result, index) => {
+                const content = result.content || result.text || result.chunk || result.document || "";
+                const score = result.score !== undefined ? Number(result.score).toFixed(3) : null;
 
-        document
-            .getElementById("resultCount")
-            .textContent =
-            results.length +
-            " results";
+                const title = result.title || result.documentTitle || result.fileName || "Document " + (index + 1);
+                const source = result.source || result.fileName || result.documentId || "";
 
-
-        results.forEach(
-            (result, index) => {
-
-
-                const content =
-                    result.content ||
-                    result.text ||
-                    result.chunk ||
-                    result.document ||
-                    "";
-
-
-                const score =
-                    result.score !== undefined
-                        ? Number(result.score)
-                            .toFixed(3)
-                        : null;
-
-
-                const title =
-                    result.title ||
-                    result.documentTitle ||
-                    result.fileName ||
-                    "Document " +
-                    (index + 1);
-
-
-                const source =
-                    result.source ||
-                    result.fileName ||
-                    result.documentId ||
-                    "";
-
-
-                const chunk =
-                    result.chunkNumber ||
-                    result.chunkIndex ||
-                    result.index ||
-                    "";
-
-
-                const item =
-                    document
-                        .createElement("div");
-
-
-                item.className =
-                    "result-item";
-
-
+                const chunk = result.chunkNumber || result.chunkIndex || result.index || "";
+                const item = document.createElement("div");
+                item.className = "result-item";
                 item.innerHTML = `
-
                     <div class="result-header">
-
                         <div class="result-title">
-
                             ${escapeHtml(title)}
-
                         </div>
-
-                        ${
-                    score !== null
-                        ?
-                        `
+                        ${score !== null ?
+                    `
                             <div class="score">
-
-                                Score:
-                                ${score}
-
+                                Score:                                ${score}
                             </div>
                             `
-                        :
-                        ""
+                    :
+                    ""
                 }
 
                     </div>
@@ -1096,23 +825,9 @@
      */
 
     function displayRagAnswer(answer) {
-
-
-        const answerCard =
-            document
-                .getElementById("answerCard");
-
-
-        answerCard.style.display =
-            "block";
-
-
-        document
-            .getElementById("answerText")
-            .textContent =
-            answer;
-
-
+        const answerCard = document.getElementById("answerCard");
+        answerCard.style.display = "block";
+        document.getElementById("answerText").textContent = answer;
         /*
          * Your current RagController
          * only returns String.
@@ -1121,164 +836,63 @@
          * no source objects available
          * from this endpoint.
          */
-
-        document
-            .getElementById("sources")
-            .innerHTML = `
-
+        document.getElementById("sources").innerHTML = `
                 <div class="source">
-
                     <div class="source-name">
-
-                        Sources are not returned
-                        by the current RAG API.
-
+                        Sources are not returned by the current RAG API.
                     </div>
-
                     <div class="source-score">
-
-                        Consider returning the
-                        retrieved documents/chunks
-                        from RagService.
-
+                        Consider returning the retrieved documents/chunks from RagService.
                     </div>
-
                 </div>
-
             `;
-
-
         /*
-         * Show the RAG response
-         * also in the left panel.
+         * Show the RAG response also in the left panel.
          */
-
-        const results =
-            document
-                .getElementById("results");
-
-
+        const results = document.getElementById("results");
         results.innerHTML = `
-
             <div class="result-item">
-
                 <div class="result-header">
-
-                    <div class="result-title">
-
-                        Generated Answer
-
-                    </div>
-
-                    <div class="score">
-
-                        RAG
-
-                    </div>
-
+                    <div class="result-title">Generated Answer</div>
+                    <div class="score"> RAG </div>
                 </div>
-
-
-                <div class="result-content">
-
-                    ${escapeHtml(answer)}
-
-                </div>
-
+                <div class="result-content">${escapeHtml(answer)}</div>
             </div>
-
         `;
-
-
-        document
-            .getElementById("resultCount")
-            .textContent =
-            "1 answer";
-
+        document.getElementById("resultCount").textContent = "1 answer";
     }
-
 
     /*
      * ==========================================
      * LOADING
      * ==========================================
      */
-
     function showLoading(show) {
-
-
-        const loading =
-            document.getElementById("loading");
-
-
-        const results =
-            document.getElementById("results");
-
-
-        const button =
-            document
-                .getElementById("searchButton");
-
-
+        const loading = document.getElementById("loading");
+        const results = document.getElementById("results");
+        const button = document.getElementById("searchButton");
         if (show) {
-
-            loading.style.display =
-                "block";
-
-
-            results.style.display =
-                "none";
-
-
-            button.disabled =
-                true;
-
-
-            button.textContent =
-                "Searching...";
-
-
+            loading.style.display = "block";
+            results.style.display = "none";
+            button.disabled = true;
+            button.textContent = "Searching...";
         } else {
-
-            loading.style.display =
-                "none";
-
-
-            results.style.display =
-                "block";
-
-
-            button.disabled =
-                false;
-
-
-            button.textContent =
-                "Search";
-
+            loading.style.display = "none";
+            results.style.display = "block";
+            button.disabled = false;
+            button.textContent = "Search";
         }
-
     }
-
 
     /*
      * ==========================================
      * ERROR
      * ==========================================
      */
-
     function showError(message) {
-
-        const error =
-            document.getElementById("error");
-
-
-        error.textContent =
-            message;
-
-
-        error.style.display =
-            "block";
-
+        const error = document.getElementById("error");
+        error.textContent = message;
+        error.style.display = "block";
     }
 
     function clearError() {
