@@ -1,0 +1,2 @@
+1) Old data should not show: Guardrails
+2) Guardrails: for stopping other type search only should allow my document search
