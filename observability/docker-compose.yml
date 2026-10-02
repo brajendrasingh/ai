@@ -20,13 +20,16 @@ services:
       NEXTAUTH_URL: http://localhost:3000
       NEXTAUTH_SECRET: change-this-to-a-long-random-secret
       SALT: change-this-to-another-long-random-value
+      LANGFUSE_S3_EVENT_UPLOAD_BUCKET: "your-bucket-name"
       # -------------------------
       # ClickHouse
       # -------------------------
+      CLICKHOUSE_MIGRATION_URL: clickhouse://clickhouse:9000
       CLICKHOUSE_URL: http://clickhouse:8123
       CLICKHOUSE_USER: langfuse
       CLICKHOUSE_PASSWORD: langfuse
       CLICKHOUSE_DB: langfuse
+      CLICKHOUSE_CLUSTER_ENABLED: "false"
       # -------------------------
       # Redis
       # -------------------------
@@ -34,7 +37,7 @@ services:
       # -------------------------
       # Encryption
       # -------------------------
-      ENCRYPTION_KEY: 0000000000000000000000000000000000000000000000000000000000000000
+      ENCRYPTION_KEY: 7f3a9c2e81d64b05a9f7c1e3d8b2460c5a1e9f3b7d2c8046e1a5b9c3f7d02841
 
     networks:
       - ai-network
@@ -48,7 +51,7 @@ services:
       POSTGRES_PASSWORD: langfuse
       POSTGRES_DB: langfuse
     volumes:
-      - langfuse-postgres-data:/var/lib/postgresql/data
+      - langfuse-postgres-data:/var/lib/postgresql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U langfuse -d langfuse"]
       interval: 5s
