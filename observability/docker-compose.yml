@@ -10,6 +10,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+#      minio:
+#        condition: service_started  
     ports:
       - "3000:3000"
     environment:
@@ -20,7 +22,14 @@ services:
       NEXTAUTH_URL: http://localhost:3000
       NEXTAUTH_SECRET: change-this-to-a-long-random-secret
       SALT: change-this-to-another-long-random-value
-      LANGFUSE_S3_EVENT_UPLOAD_BUCKET: "your-bucket-name"
+      # ==========================
+      # MinIO / S3
+      # ==========================
+      LANGFUSE_S3_EVENT_UPLOAD_BUCKET: a-bucket
+      LANGFUSE_S3_EVENT_UPLOAD_ACCESS_KEY_ID: minioadmin
+      LANGFUSE_S3_EVENT_UPLOAD_SECRET_ACCESS_KEY: minioadmin
+      LANGFUSE_S3_EVENT_UPLOAD_ENDPOINT: http://milvus-minio:9000
+      LANGFUSE_S3_EVENT_UPLOAD_REGION: us-east-1
       # -------------------------
       # ClickHouse
       # -------------------------
@@ -39,6 +48,52 @@ services:
       # -------------------------
       ENCRYPTION_KEY: 7f3a9c2e81d64b05a9f7c1e3d8b2460c5a1e9f3b7d2c8046e1a5b9c3f7d02841
 
+    networks:
+      - ai-network
+  # ============================================================
+  # Langfuse Worker
+  # ============================================================
+  langfuse-worker:
+    image: langfuse/langfuse-worker:latest
+    container_name: langfuse-worker
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      clickhouse:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      # -------------------------
+      # Langfuse
+      # -------------------------
+      DATABASE_URL: postgresql://langfuse:langfuse@postgres:5432/langfuse
+      NEXTAUTH_URL: http://localhost:3000
+      NEXTAUTH_SECRET: change-this-to-a-long-random-secret
+      SALT: change-this-to-another-long-random-value
+      ENCRYPTION_KEY: 7f3a9c2e81d64b05a9f7c1e3d8b2460c5a1e9f3b7d2c8046e1a5b9c3f7d02841
+      # -------------------------
+      # MinIO / S3
+      # -------------------------
+      LANGFUSE_S3_EVENT_UPLOAD_BUCKET: a-bucket
+      LANGFUSE_S3_EVENT_UPLOAD_ACCESS_KEY_ID: minioadmin
+      LANGFUSE_S3_EVENT_UPLOAD_SECRET_ACCESS_KEY: minioadmin
+      LANGFUSE_S3_EVENT_UPLOAD_ENDPOINT: http://milvus-minio:9000
+      LANGFUSE_S3_EVENT_UPLOAD_REGION: us-east-1
+      # -------------------------
+      # ClickHouse
+      # -------------------------
+      CLICKHOUSE_MIGRATION_URL: clickhouse://clickhouse:9000
+      CLICKHOUSE_URL: http://clickhouse:8123
+      CLICKHOUSE_USER: langfuse
+      CLICKHOUSE_PASSWORD: langfuse
+      CLICKHOUSE_DB: langfuse
+      CLICKHOUSE_CLUSTER_ENABLED: "false"
+      # -------------------------
+      # Redis
+      # -------------------------
+      REDIS_CONNECTION_STRING: redis://redis:6379
     networks:
       - ai-network
 
@@ -103,4 +158,5 @@ volumes:
 
 networks:
   ai-network:
+    name: ai-network
     driver: bridge
