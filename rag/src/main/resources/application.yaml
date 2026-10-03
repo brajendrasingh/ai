@@ -7,7 +7,16 @@ spring:
   ai:
     model:
       embedding: ollama
-
+    # ==========================
+    # Spring AI Chat Observability
+    # ==========================
+    chat:
+      observations:
+        log-prompt: true
+        log-completion: true
+    # ==========================
+    # Ollama
+    # ==========================
     ollama:
       base-url: http://172.26.8.66:11434
       # ==========================
@@ -46,3 +55,17 @@ app:
   rag:
     top-k: 5
     similarity-threshold: 0.75
+
+# ==========================
+# LLM Observability (Langfuse via OTel)
+# ==========================
+management:
+  tracing:
+    enabled: true
+    sampling:
+      probability: 1.0
+  otlp:
+    tracing:
+      export:
+        enabled: true
+        url: "http://172.26.8.66:3000/api/public/otel"

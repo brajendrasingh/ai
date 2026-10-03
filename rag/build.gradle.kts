@@ -31,6 +31,10 @@ dependencies {
     implementation("org.springframework.ai:spring-ai-starter-vector-store-milvus")
     // Spring Rest Api
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
+    //For langfuse otel logs: Actuator & Opentelemetry
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("org.springframework.boot:spring-boot-starter-opentelemetry")
+
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
