@@ -1,5 +1,7 @@
 package com.bksoft.etl.service;
 
+import com.bksoft.etl.model.DocumentSource;
+import com.bksoft.etl.reader.MetadataExtractor;
 import com.bksoft.etl.reader.PdfReader;
 import com.bksoft.etl.transformer.PdfTransformer;
 import com.bksoft.etl.writer.PdfWriter;
@@ -33,10 +35,13 @@ public class PdfIngestionService {
             // 1. EXTRACT: Read the raw PDF file
             List<Document> rawDocuments = reader.read(resource);
 
-            // 2. TRANSFORM: Split text into smaller chunks
+            // 2. Metadata
+            //rawDocuments = new MetadataExtractor().extract(rawDocuments, new DocumentSource("", "", "", 1L, ""));
+
+            // 3. TRANSFORM: Split text into smaller chunks
             List<Document> splitDocuments = transformer.transform(rawDocuments);
 
-            // 3. LOAD/WRITE: Generate embeddings & save to vector DB
+            // 4. LOAD/WRITE: Generate embeddings & save to vector DB
             pdfWriter.writeToVectorDb(splitDocuments);
         }
     }

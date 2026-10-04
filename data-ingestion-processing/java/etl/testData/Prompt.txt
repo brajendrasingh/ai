@@ -1,0 +1,8 @@
+Act as an enterprise software architect. We can divide LLM integration into three core parts: a Data Ingestion Layer, an Orchestration Layer, and an Observability Layer. I have implemented the Data Ingestion Layer using Spring Boot. Below are the configuration, controller, and service files for this component:
+IngestionController.java
+PdfIngestionService.java
+PdfReader.java
+PdfTransformer.java
+PdfWriter.java
+build.gradle.kts
+application.yaml
