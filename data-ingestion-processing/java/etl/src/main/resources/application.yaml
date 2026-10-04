@@ -1,3 +1,26 @@
+server:
+  port: 8080
 spring:
   application:
     name: etl
+  ai:
+    ollama:
+      #Embedding Model
+      embedding:
+        model: mxbai-embed-large
+
+    #Milvus Vector Database
+    vectorstore:
+      milvus:
+        client:
+          host: 172.26.8.66
+          port: 19530
+          username: root
+          password: milvus
+
+        database-name: default
+        collection-name: documents
+        embedding-dimension: 1024
+        index-type: IVF_FLAT
+        metric-type: COSINE
+        initialize-schema: true

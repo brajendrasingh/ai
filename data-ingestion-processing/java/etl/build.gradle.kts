@@ -25,19 +25,22 @@ dependencyManagement {
 }
 
 dependencies {
-	implementation("org.springframework.ai:spring-ai-starter-vector-store-milvus")
-	implementation("org.springframework.ai:spring-ai-starter-model-ollama")
-
-	implementation("org.apache.tika:tika-core:3.2.2")
-	implementation("org.apache.tika:tika-parsers-standard-package:3.2.2")
-
-	implementation("org.springframework.boot:spring-boot-starter-webmvc")
-	compileOnly("org.projectlombok:lombok")
-	annotationProcessor("org.projectlombok:lombok")
-	testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
-	testCompileOnly("org.projectlombok:lombok")
-	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-	testAnnotationProcessor("org.projectlombok:lombok")
+    // Spring AI - Ollama
+    //implementation("org.springframework.ai:spring-ai-starter-model-ollama")
+    // Spring AI - Milvus Vector Store
+    implementation("org.springframework.ai:spring-ai-starter-vector-store-milvus")
+    // Spring AI - Tika Document Reader
+    implementation("org.springframework.ai:spring-ai-tika-document-reader")
+    // Spring Web
+    implementation("org.springframework.boot:spring-boot-starter-webmvc")
+    // Lombok
+    compileOnly("org.projectlombok:lombok")
+    annotationProcessor("org.projectlombok:lombok")
+    // Tests
+    testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
+    testCompileOnly("org.projectlombok:lombok")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testAnnotationProcessor("org.projectlombok:lombok")
 }
 
 tasks.withType<Test> {

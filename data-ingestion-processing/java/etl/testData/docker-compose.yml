@@ -1,0 +1,24 @@
+services:
+  etl:
+    image: etl:1.0
+    build:
+      context: ./../
+      dockerfile: Dockerfile
+    container_name: etl
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      embedding: mxbai-embed-large
+    networks:
+      - ai-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+volumes:
+  etl-data:
+
+networks:
+  ai-network:
+    external: true
+    
