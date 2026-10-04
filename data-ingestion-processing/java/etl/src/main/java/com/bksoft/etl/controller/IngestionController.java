@@ -2,10 +2,7 @@ package com.bksoft.etl.controller;
 
 import com.bksoft.etl.service.PdfIngestionService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Files;
@@ -20,11 +17,17 @@ public class IngestionController {
         this.ingestionService = ingestionService;
     }
 
+    @GetMapping("/read")
+    public ResponseEntity<String> read(@RequestParam String fileName) throws Exception {
+        ingestionService.ingest(null, fileName);
+        return ResponseEntity.ok("Document read successfully");
+    }
+
     @PostMapping("/upload")
     public ResponseEntity<String> upload(@RequestParam MultipartFile file) throws Exception {
         Path tempFile = Files.createTempFile("upload-", "-" + file.getOriginalFilename());
         file.transferTo(tempFile);
-        ingestionService.ingest(tempFile);
+        ingestionService.ingest(tempFile, null);
         Files.deleteIfExists(tempFile);
         return ResponseEntity.ok("Document ingested successfully");
     }

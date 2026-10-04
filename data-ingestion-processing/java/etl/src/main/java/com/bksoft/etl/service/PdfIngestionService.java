@@ -5,6 +5,7 @@ import com.bksoft.etl.transformer.PdfTransformer;
 import com.bksoft.etl.writer.PdfWriter;
 import org.springframework.ai.document.Document;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
@@ -13,9 +14,8 @@ import java.util.List;
 
 @Service
 public class PdfIngestionService {
-
-    @Value("classpath:ingestionData/pdf/Cormen Introduction to Algorithms.pdf")
-    private Resource pdfResource;
+    @Value("${app.ingestion.data-dir}")
+    private String dataDir;
 
     private final PdfReader reader;
     private final PdfTransformer transformer;
@@ -27,14 +27,17 @@ public class PdfIngestionService {
         this.pdfWriter = pdfWriter;
     }
 
-    public void ingest(Path filePath) throws Exception {
-        // 1. EXTRACT: Read the raw PDF file
-        List<Document> rawDocuments = reader.read(pdfResource);
+    public void ingest(Path filePath, String fileName) throws Exception {
+        if (fileName != null) {
+            Resource resource = new FileSystemResource(dataDir + "/incoming/" + fileName);
+            // 1. EXTRACT: Read the raw PDF file
+            List<Document> rawDocuments = reader.read(resource);
 
-        // 2. TRANSFORM: Split text into smaller chunks
-        List<Document> splitDocuments = transformer.transform(rawDocuments);
+            // 2. TRANSFORM: Split text into smaller chunks
+            List<Document> splitDocuments = transformer.transform(rawDocuments);
 
-        // 3. LOAD/WRITE: Generate embeddings & save to vector DB
-        pdfWriter.writeToVectorDb(splitDocuments);
+            // 3. LOAD/WRITE: Generate embeddings & save to vector DB
+            pdfWriter.writeToVectorDb(splitDocuments);
+        }
     }
 }

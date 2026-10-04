@@ -5,6 +5,7 @@ spring:
     name: etl
   ai:
     ollama:
+      base-url: http://172.26.8.66:11434
       #Embedding Model
       embedding:
         model: mxbai-embed-large
@@ -24,3 +25,7 @@ spring:
         index-type: IVF_FLAT
         metric-type: COSINE
         initialize-schema: true
+
+app:
+  ingestion:
+    data-dir: ./../../ingestionData
