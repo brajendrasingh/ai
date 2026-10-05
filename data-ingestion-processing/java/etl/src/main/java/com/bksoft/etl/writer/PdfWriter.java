@@ -20,7 +20,16 @@ public class PdfWriter {
         long start = System.currentTimeMillis();
         vectorStore.add(documents);
         long end = System.currentTimeMillis();
-        log.info("vectorStore.add() completed. documents={}, time={} ms", documents.size(), end - start);
+        long milliSecond = end - start;
+        log.info("vectorStore.add() completed. documents={}, time={} Milli Second, TimeInSecond={}", documents.size(), milliSecond, milliSecond/1000);
         System.out.println("Successfully ingested PDF and loaded " + documents.size() + " text chunks into the Vector Database!");
+    }
+
+    public void writeAndEvictStaleVersions(List<Document> documents, String docId, long currentVersion) {
+        //Commit new content
+        vectorStore.add(documents);
+        String deleteExpression = String.format("doc_id == '%s' && doc_version < %d", docId, currentVersion);
+        //Evicting stale records via expression
+        vectorStore.delete(deleteExpression);
     }
 }

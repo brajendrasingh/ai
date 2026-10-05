@@ -9,7 +9,11 @@ services:
     ports:
       - "8080:8080"
     environment:
-      embedding: mxbai-embed-large
+      INGESTION_DATA_DIR: /data/ingestion
+
+    volumes:
+      - etl-data:/data/ingestion
+
     networks:
       - ai-network
     extra_hosts:
