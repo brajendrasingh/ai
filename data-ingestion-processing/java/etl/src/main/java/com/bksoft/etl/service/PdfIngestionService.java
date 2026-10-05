@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class PdfIngestionService {
@@ -56,7 +57,8 @@ public class PdfIngestionService {
         List<Document> rawDocuments = reader.read(new FileSystemResource(dataDir + "/incoming/" + fileName));
 
         // 2. Metadata
-        rawDocuments = metadataExtractor.extract(rawDocuments, new DocumentSource("", "", "", 1L, ""));
+        String documentId = UUID.randomUUID().toString();
+        rawDocuments = metadataExtractor.extract(rawDocuments, new DocumentSource(documentId, fileName, "", 1L, ""));
 
         // 3. TRANSFORM: Split text into smaller chunks
         List<Document> splitDocuments = transformer.transform(rawDocuments);

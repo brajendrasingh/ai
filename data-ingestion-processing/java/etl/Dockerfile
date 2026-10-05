@@ -1,7 +1,7 @@
 # ============================================
 # Stage 1: Build
 # ============================================
-FROM eclipse-temurin:25-jdk AS builder
+FROM eclipse-temurin:27-jdk AS builder
 
 WORKDIR /app
 
@@ -26,7 +26,7 @@ RUN ./gradlew bootJar --no-daemon
 # ============================================
 # Stage 2: Runtime
 # ============================================
-FROM eclipse-temurin:25-jre
+FROM eclipse-temurin:27-jre
 
 WORKDIR /app
 

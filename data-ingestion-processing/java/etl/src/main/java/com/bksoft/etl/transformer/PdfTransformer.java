@@ -1,5 +1,6 @@
 package com.bksoft.etl.transformer;
 
+import com.bksoft.etl.constants.MetadataKeys;
 import com.bksoft.etl.utils.FileUtils;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.transformer.splitter.TokenTextSplitter;
@@ -28,8 +29,8 @@ public class PdfTransformer {
         for (Document chunk : splittedChunks) {
             String chuckText = chunk.getText();
             String chunkHash = fileUtils.generateSha256(chuckText);
-            chunk.getMetadata().put("doc_id", "doc_version");
-            chunk.getMetadata().put("doc_version", "doc_version");
+            chunk.getMetadata().put("doc_id", chunk.getMetadata().get(MetadataKeys.DOCUMENT_ID));
+            chunk.getMetadata().put("doc_version", "1");
             chunk.getMetadata().put("chunk_hash", chunkHash);
         }
         return splittedChunks;

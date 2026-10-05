@@ -9,10 +9,10 @@ services:
     ports:
       - "8080:8080"
     environment:
-      INGESTION_DATA_DIR: /data/ingestion
+      INGESTION_DATA_DIR: /data/ingestionData
 
     volumes:
-      - etl-data:/data/ingestion
+      - ./../../../../data-ingestion-processing/ingestionData:/data/ingestionData
 
     networks:
       - ai-network

@@ -21,7 +21,7 @@ public class PdfWriter {
         vectorStore.add(documents);
         long end = System.currentTimeMillis();
         long milliSecond = end - start;
-        log.info("vectorStore.add() completed. documents={}, time={} Milli Second, TimeInSecond={}", documents.size(), milliSecond, milliSecond/1000);
+        log.info("vectorStore.add() completed. documents={}, time={} Milli Second, TimeInSecond={}, Minutes={}", documents.size(), milliSecond, milliSecond/1000, milliSecond/60000);
         System.out.println("Successfully ingested PDF and loaded " + documents.size() + " text chunks into the Vector Database!");
     }
 
