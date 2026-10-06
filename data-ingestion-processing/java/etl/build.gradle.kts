@@ -25,8 +25,11 @@ dependencyManagement {
 }
 
 dependencies {
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+	implementation("com.h2database:h2:2.5.252")
+
     // Spring AI - Ollama
-    //implementation("org.springframework.ai:spring-ai-starter-model-ollama")
+    implementation("org.springframework.ai:spring-ai-starter-model-ollama")
     // Spring AI - Milvus Vector Store
     implementation("org.springframework.ai:spring-ai-starter-vector-store-milvus")
     // Spring AI - Tika Document Reader

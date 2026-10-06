@@ -20,6 +20,7 @@ public class IngestionController {
     @GetMapping("/read")
     public ResponseEntity<String> read(@RequestParam String fileName) throws Exception {
         ingestionService.ingest(null, fileName);
+        //ingestionService.ingestVersionedData(null, fileName);
         return ResponseEntity.ok("Document read successfully");
     }
 

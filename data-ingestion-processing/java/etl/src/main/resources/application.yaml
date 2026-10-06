@@ -1,4 +1,6 @@
 server:
+  servlet:
+    context-path: /
   port: 8080
 spring:
   application:
@@ -25,6 +27,20 @@ spring:
         index-type: IVF_FLAT
         metric-type: COSINE
         initialize-schema: true
+
+  datasource:
+    url: jdbc:h2:mem:portal
+    driverClassName: org.h2.Driver
+    username: root
+    password: root
+  h2:
+    console:
+      enabled: true
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: false
 
 app:
   ingestion:
