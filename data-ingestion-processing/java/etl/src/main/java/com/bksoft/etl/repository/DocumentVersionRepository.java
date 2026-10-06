@@ -16,11 +16,9 @@ public interface DocumentVersionRepository extends JpaRepository<DocumentVersion
 
     Optional<DocumentVersionEntity> findTopByDocumentIdOrderByVersionDesc(Long documentId);
 
-    Optional<DocumentVersionEntity> findByFileHash(String fileHash);
+    Optional<DocumentVersionEntity> findByChecksum(String checksum);
 
     boolean existsByDocumentIdAndChecksum(Long documentId, String checksum);
 
-    boolean existsByDocumentIdAndFileHash(String documentId, String fileHash);
-
-    boolean existsByFileHash(String fileHash);
+    boolean existsByChecksum(String checksum);
 }

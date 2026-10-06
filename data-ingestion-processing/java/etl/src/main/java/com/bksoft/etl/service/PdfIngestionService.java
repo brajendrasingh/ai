@@ -5,6 +5,7 @@ import com.bksoft.etl.entities.DocumentVersionEntity;
 import com.bksoft.etl.model.DocumentSource;
 import com.bksoft.etl.reader.MetadataExtractor;
 import com.bksoft.etl.reader.PdfReader;
+import com.bksoft.etl.repository.DocumentRepository;
 import com.bksoft.etl.repository.DocumentVersionRepository;
 import com.bksoft.etl.transformer.PdfTransformer;
 import com.bksoft.etl.utils.FileUtils;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,15 +31,17 @@ public class PdfIngestionService {
     private final PdfTransformer transformer;
     private final PdfWriter pdfWriter;
     private final MetadataExtractor metadataExtractor;
+    private final DocumentRepository documentRepository;
     private final DocumentVersionRepository versionRepository;
 
     public PdfIngestionService(PdfReader reader, PdfTransformer transformer, PdfWriter pdfWriter, MetadataExtractor metadataExtractor,
-                               DocumentVersionRepository versionRepository) {
+                               DocumentVersionRepository versionRepository, DocumentRepository documentRepository) {
         this.reader = reader;
         this.transformer = transformer;
         this.pdfWriter = pdfWriter;
         this.metadataExtractor = metadataExtractor;
         this.versionRepository = versionRepository;
+        this.documentRepository = documentRepository;
     }
 
     public void ingest(Path filePath, String fileName) throws Exception {
@@ -63,12 +67,15 @@ public class PdfIngestionService {
         String documentId = UUID.randomUUID().toString();
         int version = 1;
         //Check whether this exact file version already exists in database
-        if (versionRepository.existsByFileHash(fileHash)) {
-            DocumentVersionEntity de = versionRepository.findByFileHash(fileHash).get();
+        if (versionRepository.existsByChecksum(fileHash)) {
+            DocumentVersionEntity de = versionRepository.findByChecksum(fileHash).get();
             version = de.getVersion() + 1;
             DocumentEntity d = de.getDocument();
             System.out.println("Document already exists: " + d.getFileName() + ", hash=" + fileHash);
             documentId = d.getDocumentId();
+        } else {
+            documentRepository.save(DocumentEntity.builder().documentId(documentId).fileName(fileName).latestVersion(version)
+                    .createdAt(Instant.now()).updatedAt(Instant.now()).build());
         }
         String contentType = Files.probeContentType(resource.getFile().toPath());
         // 1. EXTRACT: Read the raw PDF file

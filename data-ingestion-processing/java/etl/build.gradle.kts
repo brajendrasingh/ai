@@ -26,7 +26,10 @@ dependencyManagement {
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+	//H2 database
 	implementation("com.h2database:h2:2.5.252")
+	//For h2 db console only
+	implementation("org.springframework.boot:spring-boot-h2console")
 
     // Spring AI - Ollama
     implementation("org.springframework.ai:spring-ai-starter-model-ollama")
