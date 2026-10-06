@@ -71,12 +71,16 @@ public class PdfIngestionService {
             System.out.println("Document already exists: " + fileName + ", hash=" + fileHash);
             return;
         } else if (documentRepository.existsByFileName(fileName)) { //Check whether this exact file version already exists in database
-            DocumentEntity d = documentRepository.findByFileName(fileName).get();
-            DocumentVersionEntity de = versionRepository.findTopByChecksumOrderByVersionDesc(fileHash).get();
+            DocumentEntity document = documentRepository.findByFileName(fileName).get();
+            DocumentVersionEntity de = versionRepository.findTopByDocumentIdOrderByVersionDesc(document.getId()).get();
             version = de.getVersion() + 1;
-            DocumentVersionEntity dve = DocumentVersionEntity.builder().document(d).version(version)
+            DocumentVersionEntity dve = DocumentVersionEntity.builder().document(document).version(version)
                     .checksum(fileHash).filePath(fileName).status(VersionStatus.INGESTED).createdAt(Instant.now()).build();
             versionRepository.save(dve);
+
+            document.setLatestVersion(version);
+            document.setUpdatedAt(Instant.now());
+            documentRepository.save(document);
         } else {
             DocumentEntity de = DocumentEntity.builder().documentId(documentId).fileName(fileName).latestVersion(version)
                     .createdAt(Instant.now()).updatedAt(Instant.now()).build();
