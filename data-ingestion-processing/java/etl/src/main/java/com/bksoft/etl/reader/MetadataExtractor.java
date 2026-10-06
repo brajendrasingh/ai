@@ -30,6 +30,7 @@ public class MetadataExtractor {
             document.getMetadata().put("contentType", source.contentType());
             document.getMetadata().put("fileSize", source.fileSize());
             document.getMetadata().put("checksum", source.checksum());
+            document.getMetadata().put("version", source.version());
         }
         return documents;
     }

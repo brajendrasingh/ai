@@ -30,7 +30,7 @@ public class PdfTransformer {
             String chuckText = chunk.getText();
             String chunkHash = fileUtils.generateSha256(chuckText);
             chunk.getMetadata().put("doc_id", chunk.getMetadata().get(MetadataKeys.DOCUMENT_ID));
-            chunk.getMetadata().put("doc_version", "1");
+            chunk.getMetadata().put("doc_version", chunk.getMetadata().get("version"));
             chunk.getMetadata().put("chunk_hash", chunkHash);
         }
         return splittedChunks;

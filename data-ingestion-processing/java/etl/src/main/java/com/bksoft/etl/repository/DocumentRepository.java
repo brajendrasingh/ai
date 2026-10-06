@@ -9,4 +9,6 @@ import java.util.Optional;
 @Repository
 public interface DocumentRepository extends JpaRepository<DocumentEntity, Long> {
     Optional<DocumentEntity> findByDocumentId(String documentId);
+    Optional<DocumentEntity> findByFileName(String fileName);
+    boolean existsByFileName(String fileName);
 }
