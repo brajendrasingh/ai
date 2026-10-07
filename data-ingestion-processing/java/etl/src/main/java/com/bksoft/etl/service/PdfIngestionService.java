@@ -100,6 +100,6 @@ public class PdfIngestionService {
         List<Document> splitDocuments = transformer.transform(rawDocuments);
 
         // 4. LOAD/WRITE: Generate embeddings & save to vector DB
-        pdfWriter.writeAndEvictStaleVersions(splitDocuments, documentId, 2);
+        pdfWriter.writeAndEvictStaleVersions(splitDocuments, documentId, version);
     }
 }
